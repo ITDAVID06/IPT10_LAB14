@@ -1,10 +1,10 @@
 <?php
-require 'init.php'; // Include Stripe initialization
+require 'init.php';
 
 // Fetch customers and products from Stripe
 try {
-    $customers = $stripe->customers->all(['limit' => 10]); // Fetch 10 customers
-    $products = $stripe->products->all(['limit' => 10]); // Fetch 10 products
+    $customers = $stripe->customers->all(['limit' => 10]); 
+    $products = $stripe->products->all(['limit' => 10]); 
 } catch (\Stripe\Exception\ApiErrorException $e) {
     die("Error fetching data: " . htmlspecialchars($e->getMessage()));
 }
@@ -13,7 +13,7 @@ $errorMessage = '';
 $successMessage = '';
 $invoice = null;
 
-// Handle form submission for Invoice Creation
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $customer_id = $_POST['customer'];
     $selected_prices = $_POST['prices'] ?? [];
@@ -22,12 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errorMessage = "Please select a customer and at least one product price.";
     } else {
         try {
-            // Step 1: Create an invoice for the selected customer
+
             $invoice = $stripe->invoices->create([
                 'customer' => htmlspecialchars($customer_id),
             ]);
 
-            // Step 2: Attach selected prices as line items to the invoice
+
             foreach ($selected_prices as $price_id) {
                 $stripe->invoiceItems->create([
                     'customer' => htmlspecialchars($customer_id),
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
             }
 
-            // Step 3: Finalize the invoice
+
             $stripe->invoices->finalizeInvoice($invoice->id);
             $invoice = $stripe->invoices->retrieve($invoice->id);
 

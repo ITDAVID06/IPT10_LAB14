@@ -1,5 +1,6 @@
 <?php
 require "init.php";
+include('navbar.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
